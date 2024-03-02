@@ -1,0 +1,45 @@
+def is_valid_assignment(graph, assignment, node, color):
+    for neighbor in graph[node]:
+        if neighbor in assignment and assignment[neighbor] == color:
+            return False
+    return True
+
+def backtracking(graph, colors, assignment):
+    if len(assignment) == len(graph):
+        return assignment
+    
+    node = None
+    for n in graph:
+        if n not in assignment:
+            node = n
+            break
+    
+    for color in colors:
+        if is_valid_assignment(graph, assignment, node, color):
+            assignment[node] = color
+            result = backtracking(graph, colors, assignment)
+            if result is not None:
+                return result
+            del assignment[node]
+    
+    return None
+
+
+graph = {
+    'WA': ['NT', 'SA'],
+    'NT': ['WA', 'SA', 'Q'],
+    'SA': ['WA', 'NT', 'Q', 'NSW', 'V'],
+    'Q': ['NT', 'SA', 'NSW'],
+    'NSW': ['Q', 'SA', 'V'],
+    'V': ['SA', 'NSW']
+}
+
+colors = ['red', 'green', 'blue']
+
+assignment = backtracking(graph, colors, {})
+if assignment:
+    print("Map coloring assignment:")
+    for region, color in assignment.items():
+        print(region, "-->", color)
+else:
+    print("No solution exists.")
