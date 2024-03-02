@@ -1,0 +1,42 @@
+from collections import defaultdict, deque
+
+class Node:
+    def _init_(self, value):
+        self.value = value
+        self.children = []
+
+class Graph:
+    def _init_(self):
+        self.graph = defaultdict(Node)
+
+    def add_edge(self, parent, child):
+        if parent not in self.graph:
+            self.graph[parent] = Node(parent)
+        if child not in self.graph:
+            self.graph[child] = Node(child)
+        self.graph[parent].children.append(child)
+
+    def bfs(self, start):
+        visited = set()
+        queue = deque([start])
+        visited.add(start)
+
+        while queue:
+            node_value = queue.popleft()
+            print(node_value, end=" ")
+
+            node = self.graph[node_value]
+            for child in node.children:
+                if child not in visited:
+                    queue.append(child)
+                    visited.add(child)
+g = Graph()
+g.add_edge('A', 'B')
+g.add_edge('A', 'C')
+g.add_edge('B', 'D')
+g.add_edge('B', 'E')
+g.add_edge('C', 'F')
+g.add_edge('C', 'G')
+
+print("BFS Traversal starting from node 'A':")
+g.bfs('A')
